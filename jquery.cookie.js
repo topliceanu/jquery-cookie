@@ -7,12 +7,26 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.opensource.org/licenses/GPL-2.0
  */
-(function($) {
-    $.cookie = function(key, value, options) {
+(function() {
+
+	var _extend = function (obj) {
+		var args = Array.prototype.slice.call(arguments, 1),
+			i,k,j, n = args.length, o;
+		for (i = 0; i < n; i ++) (function (j) {
+			o = args[i];
+			for (var k in o) 
+				if (o.hasOwnProperty(k)) (function(key, value) {
+					obj[key] = value;
+				})(k, o[k]);
+		})(i);
+		return obj;
+	};
+
+   	this._cookie = function(key, value, options) {
 
         // key and at least value given, set cookie...
         if (arguments.length > 1 && (!/Object/.test(Object.prototype.toString.call(value)) || value === null || value === undefined)) {
-            options = $.extend({}, options);
+            options = _extend({}, options);
 
             if (value === null || value === undefined) {
                 options.expires = -1;
@@ -44,4 +58,6 @@
         }
         return null;
     };
-})(jQuery);
+
+	if (this.jQuery) this.jQuery.cookie = this._cookie;
+}).call(this);
